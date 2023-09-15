@@ -51,7 +51,7 @@
 
 username VARCHAR (100) NOT NULL - логин пользователя
 email VARCHAR (100) NOT NULL - почтовый ящик пользователя
-password VARCHAR (100) NOT NULL - пароль пользователя
+password VARCHAR (100) NOT NULL - пароль пользователя (хранить по другому надо (хеш.))
 name VARCHAR (100) NOT NULL - имя пользователя
 surname VARCHAR (100) NOT NULL - фамилия пользователя
 
@@ -130,7 +130,7 @@ address_id INTEGER NOT NULL FK - связь с филиалом (InsuranceCompan
 
 9. Position
 
-Описывает должности, которые либо уже заняты, либо нет
+Описывает должности, которые либо уже заняты агентами, либо нет
 
 is_bool BOOL NOT NULL - должность занята/не занята
 title VARCHAR (100) NOT NULL - название должности
@@ -143,13 +143,6 @@ description TEXT NOT NULL - описание должности
 name VARCHAR (100) NOT NULL - наименование
 address VARCHAR (100) NOT NULL - адресс филиала
 phone_number VARCHAR (100) NOT NULL - номер телефона филиала
-letter_id INTEGER NOT NULL FK - связь с буквой алфавита (Letters), по которой будет доступен поиск филиалов
-
-11. Letters
-
-Описывает букву алфавита, по которой будет доступна сортировка филиалов компании
-
-letter VARCHAR (1) NOT NULL - буква
 
 ---
 
