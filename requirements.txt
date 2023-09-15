@@ -1,8 +1,6 @@
-# Описание фунциональных требований к проекту
+Описание фунциональных требований к проекту
 
----
-
-## Функциональность
+Функциональность
 
 Всех пользователей можно разделить на две основные категории:
 
@@ -38,4 +36,112 @@
 2. Просмотр своих существующих договоров
 3. Просмотр информации о возможностях страховой компании
 4. Оставить отзыв
+
+Описание сущностей
+
+1. User
+
+Описывает общую сущность пользователя
+
+username VARCHAR (100) NOT NULL - логин пользователя
+email VARCHAR (100) NOT NULL - почтовый ящик пользователя
+password VARCHAR (100) NOT NULL - пароль пользователя
+name VARCHAR (100) NOT NULL - имя пользователя
+surname VARCHAR (100) NOT NULL - фамилия пользователя
+
+2. Feedback
+
+Описывает отзыв, который может оставить пользователь:
+
+name VARCHAR (100) NOT NULL UNIQUE - имя пользователя
+last_name VARCHAR (100) NOT NULL - фамилия пользователя
+rating INTEGER NOT NULL - оценка пользователем выполненных услуг от 0 до 5
+feedback VARCHAR (200) NOT NULL - словесная оценка пользователем выполненных услуг
+user_id INTEGER NOT NULL FK - автор отзыва (User)
+
+3. Contract
+
+Описывает контракт, который заключает агент страхования с клиентом:
+
+last_name VARCHAR (100) NOT NULL - фамилия клиента
+name VARCHAR (100) NOT NULL - имя клиента
+middle_name VARCHAR (100) NOT NULL - отчество клиента
+email VARCHAR (100) NOT NULL - почтовый ящик клиента
+phone_number VARCHAR (13) NOT NULL - номер телефона клиента
+initial_payment DECIMAL NOT NULL - первоначальный взнос
+time_create DATETIME - время создания договора
+user_id INTEGER NOT NULL FK - связь с клиентом (User) для отображения имеющихся договоров у клиента
+ins_type_id INTEGER NOT NULL FK - связь с типом страхования (InsuranceType) для выбора клиентом нужного типа страхования
+ins_obj_id INTEGER NOT NULL FK - связь с возможным объектом страхования (InsuranceObject) для выбора клиентом нужного объекта страхования
+ins_agent_id INTEGER NOT NULL FK - связь с агентом страховой компании (InsuranceAgent) для отображения имеющихся договоров у агента
+
+4. InsuranceType
+
+Описывает типы страхования, которые можно использовать при заключении договора
+
+title VARCHAR (100) NOT NULL - наименование типа страхования
+description TEXT NOT NULL - краткое описание типа страхования
+content TEXT NOT NULL - полное описание типа страхования
+rate DECIMAL NOT NULL - тариф
+time_create DATETIME NOT NULL - время создания
+is_published BOOL NOT NULL - отображаемо/неотображаемо
+category_id INTEGER NOT NULL - связь с категорие (Category), к которой должен относиться тип страхования
+ins_obj_id INTEGER NOT NULL - связь с объектом страхования (Object), который может относиться к данному типу страхования
+
+5. Category
+
+Описывает категории, к которым могут быть привязаны определенные типы страхования
+
+name VARCHAR (100) NOT NULL - наименование
+
+6. InsuranceObject
+
+Описывает объекты страхования, которые может выбрать пользователь при заключении договора
+
+name VARCHAR (100) NOT NULL - наименование
+
+7. Coupons
+
+Описывает возможные купоны и акции, которые получает клиент после заключение договора
+
+archived BOOL NOT NULL- действует/недействует
+title VARCHAR (100) NOT NULL - наименование
+description TEXT NOT NULL - описание
+user_id INTEGER NOT NULL FK - связь с пользователями (User), у которых может быть в наличии данный промокод
+
+8. InsuranceAgent
+
+Описывает агента страхования, с которым клиент заключает договор
+
+last_name VARCHAR (100) NOT NULL - фамилия
+name VARCHAR (100) NOT NULL - имя
+middle_name VARCHAR (100) NOT NULL - отчество
+email VARCHAR (100) NOT NULL - почтовый ящик
+phone_number VARCHAR (13) NOT NULL - номер телефона
+description TEXT NOT NULL- описание предоставляемы услуг
+position_id INTEGER NOT NULL FK - связь с должность (Position), которую занимает агент
+address_id INTEGER NOT NULL FK - связь с филиалом (InsuranceCompany), в котором работает агент
+
+9. Position
+
+Описывает должности, которые либо уже заняты, либо нет
+
+is_bool BOOL NOT NULL - должность занята/не занята
+title VARCHAR (100) NOT NULL - название должности
+description TEXT NOT NULL - описание должности
+
+10. InsuranceCompany
+
+Описывает филиалы страховой компании
+
+name VARCHAR (100) NOT NULL - наименование
+address VARCHAR (100) NOT NULL - адресс филиала
+phone_number VARCHAR (100) NOT NULL - номер телефона филиала
+letter_id INTEGER NOT NULL FK - связь с буквой алфавита (Letters), по которой будет доступен поиск филиалов
+
+11. Letters
+
+Описывает букву алфавита, по которой будет доступна сортировка филиалов компании
+
+letter VARCHAR (1) NOT NULL - буква
 
