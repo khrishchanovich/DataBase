@@ -61,20 +61,16 @@ surname VARCHAR (100) NOT NULL - фамилия пользователя
 
 rating INTEGER NOT NULL - оценка пользователем выполненных услуг от 0 до 5
 feedback TEXT NOT NULL - словесная оценка пользователем выполненных услуг
-user_id INTEGER NOT NULL FK - автор отзыва (User)
+client_id INTEGER NOT NULL FK - автор отзыва (User)
 
 3. Contract
 
 Описывает контракт, который заключает агент страхования с клиентом:
 
-email VARCHAR (100) NOT NULL - почтовый ящик клиента
-phone_number VARCHAR (13) NOT NULL - номер телефона клиента
 initial_payment DECIMAL NOT NULL - первоначальный взнос
 time_create DATETIME - время создания договора
-user_id INTEGER NOT NULL FK - связь с клиентом (User) для отображения имеющихся договоров у клиента
-ins_agent_id INTEGER NOT NULL FK - связь с агентом страховой компании (InsuranceAgent) для отображения имеющихся договоров у агента
-ins_type_id INTEGER NOT NULL FK - связь с типом страхования (InsuranceType) для выбора клиентом нужного типа страхования
-ins_obj_id INTEGER NOT NULL FK - связь с возможным объектом страхования (InsuranceObject) для выбора клиентом нужного объекта страхования
+journal_id INTEGER NOT NULL FK
+
 
 4. InsuranceType
 
@@ -89,46 +85,49 @@ is_published BOOL NOT NULL - отображаемо/неотображаемо
 category_id INTEGER NOT NULL - связь с категорие (Category), к которой должен относиться тип страхования
 ins_obj_id INTEGER NOT NULL - связь с объектом страхования (Object), который может относиться к данному типу страхования
 
-5. Category
+5. InsuranceTypeObject
+
+ins_type_id INTEGER NOT NULL FK
+ins_obj_id INTEGER NOT NULL FK
+
+6. Category
 
 Описывает категории, к которым могут быть привязаны определенные типы страхования
 
 name VARCHAR (100) NOT NULL - наименование
 description TEXT NOT NULL - описание категории
 
-6. InsuranceObject
+7. InsuranceObject
 
 Описывает объекты страхования, которые может выбрать пользователь при заключении договора
 
 name VARCHAR (100) NOT NULL - наименование
 description TEXT NOT NULL - описание возможного объекта страхования
 
-7. Coupons
+8. Coupons
 
 Описывает возможные купоны и акции, которые получает клиент после заключение договора
 
 title VARCHAR (100) NOT NULL - наименование
 description TEXT NOT NULL - описание
-user_id INTEGER NOT NULL FK - связь с пользователями (User), у которых может быть в наличии данный промокод
+client_id INTEGER NOT NULL FK - связь с пользователями (User), у которых может быть в наличии данный промокод
 
-8. InsuranceAgent
+9. InsuranceAgent
 
 Описывает агента страхования, с которым клиент заключает договор
 
-email VARCHAR (100) NOT NULL - почтовый ящик
-phone_number VARCHAR (13) NOT NULL - номер телефона
-description TEXT NOT NULL- описание предоставляемы услуг
 position_id INTEGER NOT NULL FK - связь с должность (Position), которую занимает агент
 address_id INTEGER NOT NULL FK - связь с филиалом (InsuranceCompany), в котором работает агент
+user_id INTEGER NOT NULL
 
-9. Position
+10. Position
 
 Описывает должности, которые либо уже заняты агентами, либо нет
 
 title VARCHAR (100) NOT NULL - название должности
 description TEXT NOT NULL - описание должности
 
-10. InsuranceCompany
+11. InsuranceCompany
 
 Описывает филиалы страховой компании
 
@@ -136,57 +135,88 @@ name VARCHAR (100) NOT NULL - наименование
 address VARCHAR (100) NOT NULL - адресс филиала
 phone_number VARCHAR (100) NOT NULL - номер телефона филиала
 
-11. AdminUser
+12. AdminUser
 
 Описывает администратора компании
 
-username VARCHAR 100 NOT NULL - логин администратора
-email VARCHAR 100 NOT NULL - почтовый ящик администратора
-password VARCHAR 100 NOT NULL - пароль администратора (хранить по-другому, например, в хэшированном виде)
-name VARCHAR 100 NOT NULL - имя администратора
-surname VARCHAR 100 NOT NULL - фамилия администратора
+user_id INTEGER NOT NULL
 
-12. Income
+13. Journal
 
-Описывает доход страховых агентов
+Описывает журнал заявок
 
-amount DECIMAL NOT NULL - сумма дохода
-ins_agent_id INTEGER NOT NULL FK - связь с сотрудником (InsuranceAgent), получившим доход
+ins_agent_id INTEGER NOT NULL FK
+client_id INTEGER NOT NULL FK
+ins_type_id INTEGER NOT NULL FK
+ins_object_id INTEGET NOT NULL FK
+
+14. Client
+
+user_id INTEGER NOT NULL FK
 
 ---
 
 Основываясь на представлениях сущностей:
 
-1. InsuranceAgent:
-- Многие к одному: Связь с позицией (Position) агента страхования (агент может занимать конкретную позицию);
-- Многие ко многим: Связь с пользователем (User) (агент может обслуживать нескольких пользователей, а пользователь может иметь нескольких агентов);
-- Одному к одному: Связь с филиалом страховой компании (InsuranceCompany) (агент может быть назначен в определенный филиал).
+1. User
 
-2. Position:
-- Один ко многим: Связь с агентом страхования (InsuranceAgent) (позиция может принадлежать нескольким агентам, но каждый агент может иметь только одну позицию).
+InsuranceAgent: - || -
+AdminUser: Одна сущность связана с другой сущностью, но последняя связь не обязательна
+Client: - || -
 
-3. User:
-- Многие ко многим: Связь с агентом страховой компании (InsuranceAgent) (пользователь может быть связан с несколькими агентами, а агенты могут обслуживать нескольких пользователей).
+2. Feedback
 
-4. Feedback:
-- Один к одному: Связь с пользователем (User) (у отзыва может быть только один автор);
+Client: Клиент может иметь ноль и более отзывов, но это не обязательно
 
-5. InsuranceCompany:
-- Многие к одному: Связь с буквами (Letters), по которым будут сортироваться филиалы (несколько филиалов могут иметь одинаковые буквы);
+3. Contract
 
-6. InsuranceType:
-- Многие к одному: Связь с категориями видов страхования (Category) (один вид страхования может относиться к одной категории, и одна категория может содержать несколько видов страхования).
+Journal: Контракт содержит одно упоминание в журнале
+ 
+4. InsuranceType
 
-7. Contract:
-- Многие к одному: Связь с клиентом (User) (у клиента может быть несколько договоров).
+Journal: Одна запись в журнале содержит одно упоминание о типе страхования
+InsuranceObject: связь многие ко многим через третью таблицу
+Category: категория может иметь в себе несколько типов страхования, но тип страхования может относиться только к одной категории
 
-8. InsuranceObject:
-- Многие ко многим: Связь с видами страхования (InsuranceType) (один объект страхования может быть связан с несколькими видами страхования, и один вид страхования может иметь несколько объектов страхования).
+5. Category
 
-9. Coupons:
-- Один ко многим: Связь с клиентом (User) (у клиента может быть несколько купонов).
+InsuranceType: - || -
 
-10. Category:
-- Многие ко многим: Связь с видами страхования (InsuranceType) (одна категория может содержать несколько видов страхования, и один вид страхования может принадлежать нескольким категориям).
+6. InsuranceObject
+
+Journal: Одна запись в журнале может содержать лишь одно упоминание объекта страхования
+InsuranceType: - || -
+
+7. InsuranceAgent
+
+User: - || -
+Journal: Одна запись в журнале может содержать лишь одного агента, но агент может иметь много записей в журнале
+Position: Агент обязан иметь одну позицию
+InsuranceCompany: Агент обязан быть приписан к одному филиалу
+
+8. Position
+
+InsuranceAgent: - || -
+
+9. InsuranceCompany
+
+InsuranceAgent: - || -
+
+10. AdminUser
+
+User: - || -
+
+11. Journal
+
+InsuranceAgent: - || -
+Client: - || -
+InsuranceType: - || -
+InsuranceObject: - || -
+
+12. Client
+
+Feedback: - || -
+Journal: - || -
+User: - || -
 
 ---
