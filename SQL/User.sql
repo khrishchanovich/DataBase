@@ -1,0 +1,16 @@
+INSERT INTO User (Username, Email, Password, Name, Surname, Status) VALUES ('user1', 'user1@example.com', '5BAA61E4', 'John', 'Doe', 'Admin');
+INSERT INTO User (Username, Email, Password, Name, Surname, Status) VALUES ('user2', 'user2@example.com', 'D53C0AD6', 'Alice', 'Johnson', 'Agent');
+INSERT INTO User (Username, Email, Password, Name, Surname, Status) VALUES ('user3', 'user3@example.com', 'E9B671D2', 'Bob', 'Smith', 'Client');
+INSERT INTO User (Username, Email, Password, Name, Surname, Status) VALUES ('user4', 'user4@example.com', '47B12325', 'Emma', 'Williams', 'Admin');
+INSERT INTO User (Username, Email, Password, Name, Surname, Status) VALUES ('user5', 'user5@example.com', 'F3D812E6', 'James', 'Brown', 'Agent');
+INSERT INTO User (Username, Email, Password, Name, Surname, Status) VALUES ('user6', 'user6@example.com', '155A79C7', 'Olivia', 'Davis', 'Client');
+INSERT INTO User (Username, Email, Password, Name, Surname, Status) VALUES ('user7', 'user7@example.com', '7C74AC12', 'William', 'Taylor', 'Admin');
+INSERT INTO User (Username, Email, Password, Name, Surname, Status) VALUES ('user8', 'user8@example.com', 'F33C250A', 'Sophia', 'Miller', 'Agent');
+INSERT INTO User (Username, Email, Password, Name, Surname, Status) VALUES ('user9', 'user9@example.com', '2E548AF6', 'Liam', 'Anderson', 'Client');
+INSERT INTO User (Username, Email, Password, Name, Surname, Status) VALUES ('user10', 'user10@example.com', '23A97373', 'Ava', 'White', 'Client');
+INSERT INTO User (Username, Email, Password, Name, Surname, Status) VALUES ('user11', 'user11@example.com', 'FC5F2FF0', 'Noah', 'Harris', 'Agent');
+INSERT INTO User (Username, Email, Password, Name, Surname, Status) VALUES ('user12', 'user12@example.com', '1DA6487A', 'Mia', 'Clark', 'Client');
+INSERT INTO User (Username, Email, Password, Name, Surname, Status) VALUES ('user13', 'user13@example.com', '0E2EF6D6', 'Ethan', 'Turner', 'Agent');
+INSERT INTO User (Username, Email, Password, Name, Surname, Status) VALUES ('user14', 'user14@example.com', '03663B9B', 'Isabella', 'Moore', 'Agent');
+INSERT INTO User (Username, Email, Password, Name, Surname, Status) VALUES ('user15', 'user15@example.com', 'F0C77E3F', 'Aiden', 'Wilson', 'Client');
+INSERT INTO User (Username, Email, Password, Name, Surname, Status) VALUES ('user16', 'user16@example.com', 'F0C77E3F', 'Aiden', 'Wilson', 'Client');

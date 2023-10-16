@@ -1,0 +1,10 @@
+INSERT INTO InsuranceType (Title, Description, Rate, CategoryId, InsuranceObjectId) VALUES ('Children in Safety', 'Insure during pregnancy.', 0.5, 1, 1);
+INSERT INTO InsuranceType (Title, Description, Rate, CategoryId, InsuranceObjectId) VALUES ('Time for School', 'Secure your childs future.', 0.08, 1, 1);
+INSERT INTO InsuranceType (Title, Description, Rate, CategoryId, InsuranceObjectId) VALUES ('Cozy at Home', 'Insure your real estate.', 0.08, 2, 2);
+INSERT INTO InsuranceType (Title, Description, Rate, CategoryId, InsuranceObjectId) VALUES ('Open Doors', 'Insure your apartment.', 0.5, 2, 2);
+INSERT INTO InsuranceType (Title, Description, Rate, CategoryId, InsuranceObjectId) VALUES ('Speed', 'Ensure peaceful city rides on a motorcycle.', 0.45, 3, 3);
+INSERT INTO InsuranceType (Title, Description, Rate, CategoryId, InsuranceObjectId) VALUES ('Abroad Bound', 'Insure your truck.', 0.9, 3, 3);
+INSERT INTO InsuranceType (Title, Description, Rate, CategoryId, InsuranceObjectId) VALUES ('My First Company', 'Do not fear for your business.', 0.05, 4, 4);
+INSERT INTO InsuranceType (Title, Description, Rate, CategoryId, InsuranceObjectId) VALUES ('Only Upward', 'Let troubles pass by your business.', 0.6, 4, 4);
+INSERT INTO InsuranceType (Title, Description, Rate, CategoryId, InsuranceObjectId) VALUES ('Sparkle and Clank', 'You can also insure precious gems.', 0.5, 5, 5);
+INSERT INTO InsuranceType (Title, Description, Rate, CategoryId, InsuranceObjectId) VALUES ('Tick-Tock', 'Insure your watches.', 0.54, 5, 5);
