@@ -31,14 +31,16 @@ CREATE TABLE User
 
 CREATE TABLE Admin
 (
-	UserId INT PRIMARY KEY,
+	Id INT PRIMARY KEY AUTO_INCREMENT,
+	UserId INT UNIQUE,
     
     CONSTRAINT admin_user_fk FOREIGN KEY (UserId) REFERENCES User(Id) ON DELETE CASCADE
 );
 
 CREATE TABLE Client
 (
-	UserId INT PRIMARY KEY,
+	Id INT PRIMARY KEY AUTO_INCREMENT,
+	UserId INT UNIQUE,
     
 	CONSTRAINT client_user_fk FOREIGN KEY (UserId) REFERENCES User(Id) ON DELETE CASCADE
 );
@@ -68,7 +70,7 @@ CREATE TABLE InsuranceAgent
 	Id INT PRIMARY KEY AUTO_INCREMENT,
 	PostId INT,
     InsuranceOfficeId INT,
-    UserId INT,
+    UserId INT UNIQUE,
     
 	CONSTRAINT agent_user_fk FOREIGN KEY (UserId) REFERENCES User(Id) ON DELETE CASCADE,
     CONSTRAINT agent_post_fk FOREIGN KEY (PostId) REFERENCES Post(Id) ON DELETE SET NULL,
@@ -84,7 +86,7 @@ CREATE TABLE Feedback
     
     CONSTRAINT user_rating CHECK(Rating >= 1 AND Rating <= 5),
     
-    CONSTRAINT feedback_client_fk FOREIGN KEY (ClientId) REFERENCES Client(UserId) ON DELETE SET NULL
+    CONSTRAINT feedback_client_fk FOREIGN KEY (ClientId) REFERENCES Client(Id) ON DELETE SET NULL
 );
 
 CREATE TABLE Category
@@ -125,8 +127,8 @@ CREATE TABLE Journal
     TimeCreate DATETIME DEFAULT CURRENT_TIMESTAMP,
     IsApproved BOOL DEFAULT 0,
     
-    CONSTRAINT journal_agent_fk FOREIGN KEY (InsuranceAgentId) REFERENCES InsuranceAgent(UserId) ON DELETE SET NULL,
-    CONSTRAINT journal_client_fk FOREIGN KEY (ClientId) REFERENCES Client(UserId) ON DELETE CASCADE,
+    CONSTRAINT journal_agent_fk FOREIGN KEY (InsuranceAgentId) REFERENCES InsuranceAgent(Id) ON DELETE SET NULL,
+    CONSTRAINT journal_client_fk FOREIGN KEY (ClientId) REFERENCES Client(Id) ON DELETE CASCADE,
     CONSTRAINT journal_type_fk FOREIGN KEY (InsuranceTypeId) REFERENCES InsuranceType(Id) ON DELETE CASCADE,
     CONSTRAINT journal_object_fk FOREIGN KEY (InsuranceObjectId) REFERENCES InsuranceObject(Id) ON DELETE CASCADE
 );
