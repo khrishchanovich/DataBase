@@ -201,8 +201,28 @@ from insuranceagent;
     ```
     
 - FULL
+
+FULL JOIN включает в результат все строки из обех таблиц, даже если нет совпадающих строк в другой таблице. Если нет совпадений для какой-либо строки, возвращается NULL для столбцов из другой таблицы. FULL JOIN возвращает объединение всех строк из левой (правой) и правой (второй) таблиц, при этом строки без совпадений в одной из таблиц будут включены.
+
 - CROSS
+
+CROSS (CARTESIAN) JOIN выполняет комбинаторное объединение строк из двух таблиц, возвращая все возможные комбинации. Этот тип соединения может привести к большому количеству строк в результате, и его следует использовать осторожно, так как он может привести к декартову произведению особенно если таблицы содержат большое количество строк.
+
+```sql
+select
+client.id, user.email
+from client
+cross join user on user.id = client.userid
+```
+
 - SELF
+
+SELF JOIN - соединение таблицы с самой собой. Он используется, когда нужно сравнивать данные в таблице между разными строками этой же таблицы. Может быть полезным при работе с иерархическими данными, где одна строка ссылается на другую в той же таблице
+
+```sql
+select a.title as instypea, b.title as instypeb, a.description
+from insurancetype as a, insurancetype as b
+```
 
 ---
 
@@ -210,19 +230,129 @@ from insuranceagent;
 
 ---
 
+Операторы GROUP BY и HAVING позволяют сгруппировать данные. Они употребляются в рамках команды SELECT.
+
+SELECT столбцы
+
+FROM таблица
+
+WHERE условие фильтрации
+
+GROUP BY столбцы для группировки
+
+HAVING условие фильтрации групп
+
+ORDER BY столбцы для сортировки
+
 ### GROUP BY + агрегирующие функции
 
----
-
-### PARTITION
+```sql
+select
+    user.name as clientname,
+    count(contract.id) as contractcount
+from user
+left join client on user.id = client.userid
+left join journal on client.id = journal.clientid
+left join contract on journal.id = contract.journalid
+where user.status = 'Client'
+group by user.id, user.name
+```
 
 ---
 
 ### PARTITION OVER + оконные функции
 
+Оконная функция - функция, которая работает с выделенным набором строк (окном, партицией) и выполняет вычисление для этого набора строк в отдельном столбце.
+
+Партиции (окна из набора строк) - набор строк, указанный для оконной функции по одному из столбцов или группе столбцов таблицы. Партиции для каждой оконной функции в запросе могут быть разделены по различным колонкам таблицы.
+
+Множество оконных функций можно разделять на 3 группы:
+
+- Агрегирующие
+    
+    sum
+    
+    avg
+    
+    count
+    
+    min
+    
+    max
+    
+    ```sql
+    select journalid, initialpayment, journal.clientid,
+    sum(initialpayment) over (partition by clientid) as sum_pay,
+    avg(initialpayment) over (partition by clientid) as avg_pay,
+    count(initialpayment) over (partition by clientid) as count_pay,
+    min(initialpayment) over (partition by clientid) as min_pay,
+    max(initialpayment) over (partition by clientid) as max_pay
+    from contract
+    join journal on journal.id = contract.journalid
+    ```
+    
+- Ранжирующие
+    
+    dense_rank()
+    
+    ntile()
+    
+    rank()
+    
+    row_number()
+    
+    cume_dist()
+    
+    ```sql
+    select journalid, initialpayment, journal.clientid,
+    row_number() over (partition by clientid order by initialpayment) as func_row_number,
+    rank() over (partition by clientid order by initialpayment) as func_rank,
+    dense_rank() over (partition by clientid order by initialpayment) as func_dense_rank,
+    ntile(2) over (partition by clientid order by initialpayment) as func_ntile,
+    cume_dist() over (partition by clientid order by initialpayment) as func_cume_dist
+    from contract
+    join journal on journal.id = contract.journalid
+    ```
+    
+- Функции смещения
+    
+    first_value()
+    
+    last_value()
+    
+    lag()
+    
+    kead()
+    
+    nth_value()
+    
+    ```sql
+    select journalid, initialpayment, journal.clientid,
+    lag(initialpayment) over (order by journal.clientid) as previous_rate,
+    lead(initialpayment) over (order by journal.clientid) as next_rate,
+    first_value(initialpayment) over (order by journalid) as first_value_rate,
+    last_value(initialpayment) over (order by journalid) as last_value_rate
+    from contract
+    join journal on journal.id = contract.journalid
+    ```
+    
+
 ---
 
 ### HAVING
+
+```sql
+select
+    user.name as clientname,
+    count(contract.id) as contractcount
+from user
+left join client on user.id = client.userid
+left join journal on client.id = journal.clientid
+left join contract on journal.id = contract.journalid
+where user.status = 'Client'
+group by user.id, user.name
+having count(*) > 1
+```
 
 ---
 
@@ -315,6 +445,48 @@ INSERT IGNORE INTO InsuranceAgent (UserId) SELECT Id FROM User WHERE Status = 'A
 
 ### CASE
 
+```sql
+select title, rate,
+case
+	when rate < 0.5
+		then 'little'
+	when rate = 0.5
+		then 'middle'
+	else 'big'
+end as category
+from insurancetype;
+```
+
+```sql
+update journal
+set 
+	insuranceagentid = case
+		when id = 2 then 1
+        when id = 3 then 1
+        when id = 4 then 3
+        when id = 5 then 3
+        when id = 6 then 6
+        else insuranceagentid
+	end,
+    isapproved = case
+		when id = 2 then 1
+        when id = 3 then 1
+        when id = 4 then 1
+        when id = 5 then 1
+        when id = 6 then 1
+		else isapproved
+	end
+where id in (2, 3, 4, 5, 6)
+```
+
 ---
 
 ### EXPLAIN
+```sql
+explain select * from client
+inner join user on user.id = client.userid
+```
+
+```sql
+explain select * from user where id > 5
+```
