@@ -1,6 +1,15 @@
-SELECT COUNT(DISTINCT CateogyId) AS CategoryId,
-	SUM(Rate),
-    MIN(Rate) AS Min,
-    MAX(Rate) AS Max,
-    AVG(Rate) AS Average
-FROM InsuranceType;
+delimiter 
+//
+create trigger trg_after_insert_user_admin
+after insert on user
+for each row
+begin
+	if new.Status = 'Admin' then
+		insert ignore into admin (UserId) values (new.Id);
+	end if;
+end;
+// 
+delimiter ;
+
+insert into user (username, email, password, name, surname, status) 
+values ('user21', 'user21@ins.com', 'F0C77E3F', 'Ken', 'Wilson', 'Admin')

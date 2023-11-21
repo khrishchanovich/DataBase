@@ -322,7 +322,7 @@ group by user.id, user.name
     
     lag()
     
-    kead()
+    lead()
     
     nth_value()
     
@@ -489,4 +489,18 @@ inner join user on user.id = client.userid
 
 ```sql
 explain select * from user where id > 5
+```
+
+ЗАПРОС ОТ ПРЕПОДАВАТЕЛЯ 
+```sql
+select
+	user.name, user.surname,
+    insurancetype.title,
+    count(insurancetype.id) as count_type,
+    rank() over (partition by insuranceagent.id order by count(insurancetype.id) desc) as rnk
+from insuranceagent
+left join user on user.id = insuranceagent.userid
+left join journal on journal.insuranceagentid = insuranceagent.id
+left join insurancetype on insurancetype.id = journal.insurancetypeid
+group by insuranceagent.id, insurancetype.id
 ```

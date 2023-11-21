@@ -182,6 +182,7 @@ InsuranceAgentId INT,
 ClientId INT NOT NULL,
 InsuranceTypeId INT NOT NULL,
 InsuranceObjectId INT NOT NULL,
+InitialPayment DECIMAL(5,2) NOT NULL CHECK (InitialPayment >= 10),
 Description TEXT NOT NULL,
 TimeCreate DATETIME DEFAULT CURRENT_TIMESTAMP,
 IsApproved BOOL DEFAULT 0,
@@ -199,7 +200,7 @@ CONSTRAINT journal_object_fk FOREIGN KEY (InsuranceObjectId) REFERENCES Insuranc
 CREATE TABLE Contract
 (
 Id INT PRIMARY KEY AUTO_INCREMENT,
-InitialPayment DECIMAL(5,2) NOT NULL CHECK (InitialPayment >= 10),
+
 TimeCreate DATETIME DEFAULT CURRENT_TIMESTAMP,
 JournalId INT,
 
@@ -346,8 +347,8 @@ INSERT INTO InsuranceType (Title, Description, Rate, CategoryId, InsuranceObject
 11. Вставка значений в таблицу Journal
 
 ```sql
-INSERT INTO Journal (ClientId, InsuranceTypeId, InsuranceObjectId, Description)
-VALUES (3, 2, 1, 'I need to insure my child');
+INSERT INTO Journal (ClientId, InsuranceTypeId, InsuranceObjectId, InitialPayment,Description)
+VALUES (3, 2, 1, 500, 'I need to insure my child');
 ```
 
 12. Обновление таблицы Journal и установка атрибутов в нужное значение
